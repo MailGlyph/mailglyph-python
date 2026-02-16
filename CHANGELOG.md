@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Mailrify/mailrify-python/compare/v1.0.0...v1.0.1) (2026-02-16)
+
+
+### Documentation
+
+* Add CI, Release Please, and PyPI publish badges to the README. ([a02f30b](https://github.com/Mailrify/mailrify-python/commit/a02f30b6b5ece8a2c52534794ef1a1ed9304ac8a))
+
 ## [1.0.0](https://github.com/Mailrify/mailrify-python/compare/v0.0.4...v1.0.0) (2026-02-16)
 
 
