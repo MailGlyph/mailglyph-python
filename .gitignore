@@ -16,3 +16,4 @@ venv/
 .env
 .env.test
 .DS_Store
+docs/*.md
