@@ -117,6 +117,8 @@ segment = client.segments.create(
     track_membership=True,
 )
 members = client.segments.list_contacts(segment.id, page=1)
+added = client.segments.add_members(segment.id, emails=["alice@example.com", "bob@example.com"])
+removed = client.segments.remove_members(segment.id, emails=["bob@example.com"])
 ```
 
 ## Campaigns

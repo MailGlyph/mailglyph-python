@@ -3,7 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 from ..http_client import HttpClient
-from ..models import FilterCondition, Segment, SegmentContactsPage
+from ..models import (
+    FilterCondition,
+    Segment,
+    SegmentContactsPage,
+    StaticSegmentMembersAddResult,
+    StaticSegmentMembersRemoveResult,
+)
 from ._utils import compact_dict
 
 
@@ -86,6 +92,32 @@ class SegmentsResource:
         )
         return SegmentContactsPage.model_validate(response)
 
+    def add_members(
+        self,
+        segment_id: str,
+        *,
+        emails: list[str],
+    ) -> StaticSegmentMembersAddResult:
+        response = self._http_client.request(
+            "POST",
+            f"/segments/{segment_id}/members",
+            json_body={"emails": emails},
+        )
+        return StaticSegmentMembersAddResult.model_validate(response)
+
+    def remove_members(
+        self,
+        segment_id: str,
+        *,
+        emails: list[str],
+    ) -> StaticSegmentMembersRemoveResult:
+        response = self._http_client.request(
+            "DELETE",
+            f"/segments/{segment_id}/members",
+            json_body={"emails": emails},
+        )
+        return StaticSegmentMembersRemoveResult.model_validate(response)
+
 
 class AsyncSegmentsResource:
     def __init__(self, http_client: HttpClient) -> None:
@@ -161,3 +193,29 @@ class AsyncSegmentsResource:
             params=params,
         )
         return SegmentContactsPage.model_validate(response)
+
+    async def add_members(
+        self,
+        segment_id: str,
+        *,
+        emails: list[str],
+    ) -> StaticSegmentMembersAddResult:
+        response = await self._http_client.arequest(
+            "POST",
+            f"/segments/{segment_id}/members",
+            json_body={"emails": emails},
+        )
+        return StaticSegmentMembersAddResult.model_validate(response)
+
+    async def remove_members(
+        self,
+        segment_id: str,
+        *,
+        emails: list[str],
+    ) -> StaticSegmentMembersRemoveResult:
+        response = await self._http_client.arequest(
+            "DELETE",
+            f"/segments/{segment_id}/members",
+            json_body={"emails": emails},
+        )
+        return StaticSegmentMembersRemoveResult.model_validate(response)

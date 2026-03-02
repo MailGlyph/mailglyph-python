@@ -162,6 +162,43 @@ def test_list_contacts_with_params() -> None:
     client.close()
 
 
+@respx.mock
+def test_add_static_segment_members() -> None:
+    client = Mailrify("sk_test")
+    route = respx.post("https://api.mailrify.com/segments/seg_1/members").mock(
+        return_value=Response(
+            200,
+            json={"added": 1, "notFound": ["missing@example.com"]},
+        )
+    )
+
+    result = client.segments.add_members("seg_1", emails=["alice@example.com"])
+
+    request_payload = parse_request_json(route)
+    assert request_payload["emails"] == ["alice@example.com"]
+    assert result.added == 1
+    assert result.not_found == ["missing@example.com"]
+    client.close()
+
+
+@respx.mock
+def test_remove_static_segment_members() -> None:
+    client = Mailrify("sk_test")
+    route = respx.delete("https://api.mailrify.com/segments/seg_1/members").mock(
+        return_value=Response(200, json={"removed": 2})
+    )
+
+    result = client.segments.remove_members(
+        "seg_1",
+        emails=["alice@example.com", "bob@example.com"],
+    )
+
+    request_payload = parse_request_json(route)
+    assert request_payload["emails"] == ["alice@example.com", "bob@example.com"]
+    assert result.removed == 2
+    client.close()
+
+
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_segments_list() -> None:
@@ -173,3 +210,25 @@ async def test_async_segments_list() -> None:
         segments = await client.segments.list()
 
     assert segments[0].id == "seg_1"
+
+
+@pytest.mark.asyncio
+@respx.mock
+async def test_async_add_and_remove_static_segment_members() -> None:
+    add_route = respx.post("https://api.mailrify.com/segments/seg_1/members").mock(
+        return_value=Response(200, json={"added": 1, "notFound": []})
+    )
+    remove_route = respx.delete("https://api.mailrify.com/segments/seg_1/members").mock(
+        return_value=Response(200, json={"removed": 1})
+    )
+
+    async with AsyncMailrify("sk_test") as client:
+        add_result = await client.segments.add_members("seg_1", emails=["user@example.com"])
+        remove_result = await client.segments.remove_members(
+            "seg_1", emails=["user@example.com"]
+        )
+
+    assert add_route.called
+    assert remove_route.called
+    assert add_result.added == 1
+    assert remove_result.removed == 1

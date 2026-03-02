@@ -15,6 +15,8 @@ from .models import (
     Segment,
     SegmentFilter,
     SendEmailResult,
+    StaticSegmentMembersAddResult,
+    StaticSegmentMembersRemoveResult,
     TrackEventResult,
     VerifyEmailResult,
 )
@@ -36,6 +38,8 @@ __all__ = [
     "Segment",
     "SegmentFilter",
     "SendEmailResult",
+    "StaticSegmentMembersAddResult",
+    "StaticSegmentMembersRemoveResult",
     "TrackEventResult",
     "ValidationError",
     "VerifyEmailResult",
