@@ -151,4 +151,13 @@ class SegmentContactsPage(MailrifyModel):
     total_pages: int | None = Field(default=None, alias="totalPages")
 
 
+class StaticSegmentMembersAddResult(MailrifyModel):
+    added: int
+    not_found: list[str] = Field(default_factory=list, alias="notFound")
+
+
+class StaticSegmentMembersRemoveResult(MailrifyModel):
+    removed: int
+
+
 FilterCondition.model_rebuild()

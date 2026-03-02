@@ -40,7 +40,25 @@ result = client.emails.send(
     from_={"name": "My App", "email": "hello@myapp.com"},
     subject="Welcome!",
     body="<h1>Hello {{name}}</h1>",
+    text="Hello {{name}}",
     data={"name": "John"},
+)
+
+# Omit `text` to let Mailrify auto-generate plain text from HTML `body`.
+html_only_result = client.emails.send(
+    to="user@example.com",
+    from_="hello@myapp.com",
+    subject="HTML Only",
+    body="<h1>Hello</h1><p>This will get text/plain fallback.</p>",
+)
+
+# Set text="" to opt out of text/plain generation.
+opt_out_result = client.emails.send(
+    to="user@example.com",
+    from_="hello@myapp.com",
+    subject="No Plain Text Part",
+    body="<h1>Hello</h1>",
+    text="",
 )
 
 verification = client.emails.verify("user@example.com")

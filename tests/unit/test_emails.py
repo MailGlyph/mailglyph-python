@@ -156,6 +156,65 @@ def test_send_with_attachments() -> None:
 
 
 @respx.mock
+def test_send_includes_text_when_provided() -> None:
+    client = Mailrify("sk_test")
+    route = respx.post("https://api.mailrify.com/v1/send").mock(
+        return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
+    )
+
+    client.emails.send(
+        to="user@example.com",
+        from_="hello@example.com",
+        subject="Welcome",
+        body="<p>Hello</p>",
+        text="Hello",
+    )
+
+    request_payload = parse_request_json(route)
+    assert request_payload["text"] == "Hello"
+    client.close()
+
+
+@respx.mock
+def test_send_omits_text_when_undefined() -> None:
+    client = Mailrify("sk_test")
+    route = respx.post("https://api.mailrify.com/v1/send").mock(
+        return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
+    )
+
+    client.emails.send(
+        to="user@example.com",
+        from_="hello@example.com",
+        subject="Welcome",
+        body="<p>Hello</p>",
+    )
+
+    request_payload = parse_request_json(route)
+    assert "text" not in request_payload
+    client.close()
+
+
+@respx.mock
+def test_send_includes_empty_text_string() -> None:
+    client = Mailrify("sk_test")
+    route = respx.post("https://api.mailrify.com/v1/send").mock(
+        return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
+    )
+
+    client.emails.send(
+        to="user@example.com",
+        from_="hello@example.com",
+        subject="Welcome",
+        body="<p>Hello</p>",
+        text="",
+    )
+
+    request_payload = parse_request_json(route)
+    assert request_payload["text"] == ""
+    client.close()
+
+
+@respx.mock
 def test_send_validation_error_missing_to() -> None:
     client = Mailrify("sk_test")
     respx.post("https://api.mailrify.com/v1/send").mock(

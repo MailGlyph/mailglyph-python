@@ -18,6 +18,7 @@ class EmailsResource:
         from_: str | dict[str, Any],
         subject: str | None = None,
         body: str | None = None,
+        text: str | None = None,
         template: str | None = None,
         data: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
@@ -26,12 +27,21 @@ class EmailsResource:
         subscribed: bool | None = None,
         name: str | None = None,
     ) -> SendEmailResult:
+        """Send a transactional email.
+
+        Args:
+            text: The plain text version of the message.
+                If not provided, the `body` will be used to generate a plain
+                text version. You can opt out of this behavior by setting value
+                to an empty string.
+        """
         payload = compact_dict(
             {
                 "to": to,
                 "from": from_,
                 "subject": subject,
                 "body": body,
+                "text": text,
                 "template": template,
                 "data": data,
                 "headers": headers,
@@ -60,6 +70,7 @@ class AsyncEmailsResource:
         from_: str | dict[str, Any],
         subject: str | None = None,
         body: str | None = None,
+        text: str | None = None,
         template: str | None = None,
         data: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
@@ -68,12 +79,21 @@ class AsyncEmailsResource:
         subscribed: bool | None = None,
         name: str | None = None,
     ) -> SendEmailResult:
+        """Send a transactional email.
+
+        Args:
+            text: The plain text version of the message.
+                If not provided, the `body` will be used to generate a plain
+                text version. You can opt out of this behavior by setting value
+                to an empty string.
+        """
         payload = compact_dict(
             {
                 "to": to,
                 "from": from_,
                 "subject": subject,
                 "body": body,
+                "text": text,
                 "template": template,
                 "data": data,
                 "headers": headers,
