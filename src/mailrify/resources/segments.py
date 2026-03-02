@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import builtins
 from typing import Any
 
 from ..http_client import HttpClient
@@ -96,7 +97,7 @@ class SegmentsResource:
         self,
         segment_id: str,
         *,
-        emails: list[str],
+        emails: builtins.list[str],
     ) -> StaticSegmentMembersAddResult:
         response = self._http_client.request(
             "POST",
@@ -109,7 +110,7 @@ class SegmentsResource:
         self,
         segment_id: str,
         *,
-        emails: list[str],
+        emails: builtins.list[str],
     ) -> StaticSegmentMembersRemoveResult:
         response = self._http_client.request(
             "DELETE",
@@ -198,7 +199,7 @@ class AsyncSegmentsResource:
         self,
         segment_id: str,
         *,
-        emails: list[str],
+        emails: builtins.list[str],
     ) -> StaticSegmentMembersAddResult:
         response = await self._http_client.arequest(
             "POST",
@@ -211,7 +212,7 @@ class AsyncSegmentsResource:
         self,
         segment_id: str,
         *,
-        emails: list[str],
+        emails: builtins.list[str],
     ) -> StaticSegmentMembersRemoveResult:
         response = await self._http_client.arequest(
             "DELETE",
