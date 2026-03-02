@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/Mailrify/mailrify-python/compare/v1.0.1...v1.1.0) (2026-03-02)
+
+
+### Features
+
+* Add `text` field to email sending parameters. ([cf7ae10](https://github.com/Mailrify/mailrify-python/commit/cf7ae10cf0bbcc4c79e80f38b75039a00973b367))
+* Implement methods to add and remove contacts from static segments, along with supporting types and documentation. ([03b99ee](https://github.com/Mailrify/mailrify-python/commit/03b99ee87396e41c6bc5d758ae6bad8f0c5d4c33))
+
 ## [1.0.1](https://github.com/Mailrify/mailrify-python/compare/v1.0.0...v1.0.1) (2026-02-16)
 
 
