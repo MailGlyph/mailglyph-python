@@ -63,7 +63,8 @@ def test_local_mailglyph_api_integration_flow() -> None:
                 to="info@mailglyph.com",
                 from_="sdk-test@mailglyph.com",
                 subject="SDK Integration Test",
-                body="<p>Hello, this is a test email from the MailGlyph SDK. Please ignore this email.</p>",
+                body="<p>Hello, this is a test email from the MailGlyph SDK.\n"
+                "Please ignore this email.</p>",
             ),
         )
         assert send_result.emails, "[1) Email Send (sk_*)] Expected at least one email result"
