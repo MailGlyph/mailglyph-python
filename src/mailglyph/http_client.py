@@ -11,13 +11,13 @@ from ._version import __version__
 from .exceptions import (
     ApiError,
     AuthenticationError,
-    MailrifyError,
+    MailGlyphError,
     NotFoundError,
     RateLimitError,
     ValidationError,
 )
 
-DEFAULT_BASE_URL = "https://api.mailrify.com"
+DEFAULT_BASE_URL = "https://api.mailglyph.com"
 DEFAULT_TIMEOUT = 30.0
 DEFAULT_MAX_RETRIES = 3
 
@@ -39,7 +39,7 @@ class HttpClient:
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": f"mailrify-python/{__version__}",
+            "User-Agent": f"mailglyph-python/{__version__}",
         }
         self._sync_client = httpx.Client(
             base_url=self._base_url, timeout=self._timeout, headers=headers
@@ -205,7 +205,7 @@ class HttpClient:
         if 500 <= status_code <= 599:
             raise ApiError(message, status_code=status_code, payload=payload)
 
-        raise MailrifyError(message, status_code=status_code, payload=payload)
+        raise MailGlyphError(message, status_code=status_code, payload=payload)
 
     @staticmethod
     def _extract_error_message(status_code: int, payload: Any, fallback: str) -> str:

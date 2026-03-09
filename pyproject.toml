@@ -3,16 +3,16 @@ requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mailrify"
+name = "mailglyph"
 version = "1.0.1"
-description = "Official Mailrify Python SDK"
+description = "Official MailGlyph Python SDK"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-  { name = "Mailrify" }
+  { name = "MailGlyph" }
 ]
-keywords = ["mailrify", "email", "sdk"]
+keywords = ["mailglyph", "email", "sdk"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
@@ -42,12 +42,12 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Mailrify/mailrify-python"
-Repository = "https://github.com/Mailrify/mailrify-python"
-Issues = "https://github.com/Mailrify/mailrify-python/issues"
+Homepage = "https://github.com/MailGlyph/mailglyph-python"
+Repository = "https://github.com/MailGlyph/mailglyph-python"
+Issues = "https://github.com/MailGlyph/mailglyph-python/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mailrify"]
+packages = ["src/mailglyph"]
 
 [tool.ruff]
 line-length = 100
@@ -66,5 +66,5 @@ addopts = "-ra"
 testpaths = ["tests"]
 asyncio_mode = "auto"
 markers = [
-  "integration: integration tests that require a real Mailrify API key"
+  "integration: integration tests that require a real MailGlyph API key"
 ]

@@ -5,26 +5,26 @@ from typing import Any
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
-class MailrifyModel(BaseModel):
+class MailGlyphModel(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
-class ContactRef(MailrifyModel):
+class ContactRef(MailGlyphModel):
     id: str
     email: str
 
 
-class SendEmailItem(MailrifyModel):
+class SendEmailItem(MailGlyphModel):
     contact: ContactRef
     email: str
 
 
-class SendEmailResult(MailrifyModel):
+class SendEmailResult(MailGlyphModel):
     emails: list[SendEmailItem] = Field(default_factory=list)
     timestamp: str | None = None
 
 
-class VerifyEmailResult(MailrifyModel):
+class VerifyEmailResult(MailGlyphModel):
     email: str
     valid: bool
     is_disposable: bool = Field(alias="isDisposable")
@@ -40,18 +40,18 @@ class VerifyEmailResult(MailrifyModel):
     reasons: list[str] = Field(default_factory=list)
 
 
-class TrackEventResult(MailrifyModel):
+class TrackEventResult(MailGlyphModel):
     contact: str
     event: str
     timestamp: str
 
 
-class ContactMeta(MailrifyModel):
+class ContactMeta(MailGlyphModel):
     is_new: bool | None = Field(default=None, alias="isNew")
     is_update: bool | None = Field(default=None, alias="isUpdate")
 
 
-class Contact(MailrifyModel):
+class Contact(MailGlyphModel):
     id: str
     email: str
     subscribed: bool
@@ -61,7 +61,7 @@ class Contact(MailrifyModel):
     meta: ContactMeta | None = Field(default=None, alias="_meta")
 
 
-class Segment(MailrifyModel):
+class Segment(MailGlyphModel):
     id: str
     name: str | None = None
     description: str | None = None
@@ -73,24 +73,24 @@ class Segment(MailrifyModel):
     updated_at: str | None = Field(default=None, alias="updatedAt")
 
 
-class SegmentFilter(MailrifyModel):
+class SegmentFilter(MailGlyphModel):
     field: str
     operator: str
     value: Any | None = None
     unit: str | None = None
 
 
-class FilterGroup(MailrifyModel):
+class FilterGroup(MailGlyphModel):
     filters: list[SegmentFilter] = Field(default_factory=list)
     conditions: FilterCondition | None = None
 
 
-class FilterCondition(MailrifyModel):
+class FilterCondition(MailGlyphModel):
     logic: str
     groups: list[FilterGroup] = Field(default_factory=list)
 
 
-class Campaign(MailrifyModel):
+class Campaign(MailGlyphModel):
     id: str
     name: str | None = None
     description: str | None = None
@@ -124,14 +124,14 @@ class Campaign(MailrifyModel):
     segment: Segment | None = None
 
 
-class ContactsPage(MailrifyModel):
+class ContactsPage(MailGlyphModel):
     contacts: list[Contact] = Field(default_factory=list)
     cursor: str | None = None
     has_more: bool = Field(default=False, alias="hasMore")
     total: int | None = None
 
 
-class CampaignsPage(MailrifyModel):
+class CampaignsPage(MailGlyphModel):
     data: list[Campaign] = Field(default_factory=list)
     page: int | None = None
     page_size: int | None = Field(default=None, alias="pageSize")
@@ -143,7 +143,7 @@ class CampaignsPage(MailrifyModel):
         return self.data
 
 
-class SegmentContactsPage(MailrifyModel):
+class SegmentContactsPage(MailGlyphModel):
     data: list[Contact] = Field(default_factory=list)
     total: int | None = None
     page: int | None = None
@@ -151,12 +151,12 @@ class SegmentContactsPage(MailrifyModel):
     total_pages: int | None = Field(default=None, alias="totalPages")
 
 
-class StaticSegmentMembersAddResult(MailrifyModel):
+class StaticSegmentMembersAddResult(MailGlyphModel):
     added: int
     not_found: list[str] = Field(default_factory=list, alias="notFound")
 
 
-class StaticSegmentMembersRemoveResult(MailrifyModel):
+class StaticSegmentMembersRemoveResult(MailGlyphModel):
     removed: int
 
 

@@ -1,8 +1,8 @@
-from .client import AsyncMailrify, Mailrify
+from .client import AsyncMailGlyph, MailGlyph
 from .exceptions import (
     ApiError,
     AuthenticationError,
-    MailrifyError,
+    MailGlyphError,
     NotFoundError,
     RateLimitError,
     ValidationError,
@@ -25,14 +25,14 @@ __version__ = "1.0.1"
 
 __all__ = [
     "ApiError",
-    "AsyncMailrify",
+    "AsyncMailGlyph",
     "AuthenticationError",
     "Campaign",
     "Contact",
     "FilterCondition",
     "FilterGroup",
-    "Mailrify",
-    "MailrifyError",
+    "MailGlyph",
+    "MailGlyphError",
     "NotFoundError",
     "RateLimitError",
     "Segment",

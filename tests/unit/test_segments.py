@@ -6,8 +6,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mailrify.client import AsyncMailrify, Mailrify
-from mailrify.exceptions import NotFoundError
+from mailglyph.client import AsyncMailGlyph, MailGlyph
+from mailglyph.exceptions import NotFoundError
 
 
 def parse_request_json(route: respx.Route) -> dict[str, object]:
@@ -43,8 +43,8 @@ CONTACT_PAYLOAD = {
 
 @respx.mock
 def test_list_segments() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/segments").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/segments").mock(
         return_value=Response(200, json=[SEGMENT_PAYLOAD])
     )
 
@@ -57,8 +57,8 @@ def test_list_segments() -> None:
 
 @respx.mock
 def test_create_segment_with_conditions() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/segments").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/segments").mock(
         return_value=Response(201, json=SEGMENT_PAYLOAD)
     )
 
@@ -73,8 +73,8 @@ def test_create_segment_with_conditions() -> None:
 
 @respx.mock
 def test_get_segment_by_id() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/segments/seg_1").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/segments/seg_1").mock(
         return_value=Response(200, json=SEGMENT_PAYLOAD)
     )
 
@@ -86,8 +86,8 @@ def test_get_segment_by_id() -> None:
 
 @respx.mock
 def test_get_segment_404() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/segments/missing").mock(return_value=Response(404))
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/segments/missing").mock(return_value=Response(404))
 
     with pytest.raises(NotFoundError):
         client.segments.get("missing")
@@ -97,8 +97,8 @@ def test_get_segment_404() -> None:
 
 @respx.mock
 def test_update_segment_conditions() -> None:
-    client = Mailrify("sk_test")
-    route = respx.patch("https://api.mailrify.com/segments/seg_1").mock(
+    client = MailGlyph("sk_test")
+    route = respx.patch("https://api.mailglyph.com/segments/seg_1").mock(
         return_value=Response(200, json=SEGMENT_PAYLOAD)
     )
 
@@ -113,8 +113,8 @@ def test_update_segment_conditions() -> None:
 
 @respx.mock
 def test_delete_segment_204() -> None:
-    client = Mailrify("sk_test")
-    route = respx.delete("https://api.mailrify.com/segments/seg_1").mock(return_value=Response(204))
+    client = MailGlyph("sk_test")
+    route = respx.delete("https://api.mailglyph.com/segments/seg_1").mock(return_value=Response(204))
 
     client.segments.delete("seg_1")
 
@@ -124,8 +124,8 @@ def test_delete_segment_204() -> None:
 
 @respx.mock
 def test_list_contacts_paginated() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/segments/seg_1/contacts").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/segments/seg_1/contacts").mock(
         return_value=Response(
             200,
             json={
@@ -147,8 +147,8 @@ def test_list_contacts_paginated() -> None:
 
 @respx.mock
 def test_list_contacts_with_params() -> None:
-    client = Mailrify("sk_test")
-    route = respx.get("https://api.mailrify.com/segments/seg_1/contacts").mock(
+    client = MailGlyph("sk_test")
+    route = respx.get("https://api.mailglyph.com/segments/seg_1/contacts").mock(
         return_value=Response(
             200, json={"data": [], "total": 0, "page": 2, "pageSize": 5, "totalPages": 0}
         )
@@ -164,8 +164,8 @@ def test_list_contacts_with_params() -> None:
 
 @respx.mock
 def test_add_static_segment_members() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/segments/seg_1/members").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/segments/seg_1/members").mock(
         return_value=Response(
             200,
             json={"added": 1, "notFound": ["missing@example.com"]},
@@ -183,8 +183,8 @@ def test_add_static_segment_members() -> None:
 
 @respx.mock
 def test_remove_static_segment_members() -> None:
-    client = Mailrify("sk_test")
-    route = respx.delete("https://api.mailrify.com/segments/seg_1/members").mock(
+    client = MailGlyph("sk_test")
+    route = respx.delete("https://api.mailglyph.com/segments/seg_1/members").mock(
         return_value=Response(200, json={"removed": 2})
     )
 
@@ -202,11 +202,11 @@ def test_remove_static_segment_members() -> None:
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_segments_list() -> None:
-    respx.get("https://api.mailrify.com/segments").mock(
+    respx.get("https://api.mailglyph.com/segments").mock(
         return_value=Response(200, json=[SEGMENT_PAYLOAD])
     )
 
-    async with AsyncMailrify("sk_test") as client:
+    async with AsyncMailGlyph("sk_test") as client:
         segments = await client.segments.list()
 
     assert segments[0].id == "seg_1"
@@ -215,14 +215,14 @@ async def test_async_segments_list() -> None:
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_add_and_remove_static_segment_members() -> None:
-    add_route = respx.post("https://api.mailrify.com/segments/seg_1/members").mock(
+    add_route = respx.post("https://api.mailglyph.com/segments/seg_1/members").mock(
         return_value=Response(200, json={"added": 1, "notFound": []})
     )
-    remove_route = respx.delete("https://api.mailrify.com/segments/seg_1/members").mock(
+    remove_route = respx.delete("https://api.mailglyph.com/segments/seg_1/members").mock(
         return_value=Response(200, json={"removed": 1})
     )
 
-    async with AsyncMailrify("sk_test") as client:
+    async with AsyncMailGlyph("sk_test") as client:
         add_result = await client.segments.add_members("seg_1", emails=["user@example.com"])
         remove_result = await client.segments.remove_members(
             "seg_1", emails=["user@example.com"]

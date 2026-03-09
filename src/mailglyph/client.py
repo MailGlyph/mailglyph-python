@@ -15,7 +15,7 @@ from .resources import (
 )
 
 
-class Mailrify:
+class MailGlyph:
     def __init__(
         self,
         api_key: str,
@@ -39,14 +39,14 @@ class Mailrify:
     def close(self) -> None:
         self._http_client.close()
 
-    def __enter__(self) -> Mailrify:
+    def __enter__(self) -> MailGlyph:
         return self
 
     def __exit__(self, exc_type: object, exc: object, exc_tb: object) -> None:
         self.close()
 
 
-class AsyncMailrify:
+class AsyncMailGlyph:
     def __init__(
         self,
         api_key: str,
@@ -70,7 +70,7 @@ class AsyncMailrify:
     async def close(self) -> None:
         await self._http_client.aclose()
 
-    async def __aenter__(self) -> AsyncMailrify:
+    async def __aenter__(self) -> AsyncMailGlyph:
         return self
 
     async def __aexit__(self, exc_type: object, exc: object, exc_tb: object) -> None:

@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project
-This is the official Mailrify Python SDK. See `./docs/` for the full specification.
+This is the official MailGlyph Python SDK. See `./docs/` for the full specification.
 
 ## Context Files (read these FIRST)
 1. [sdk-plan.md](./docs/sdk-plan.md) — Shared API spec, all 22 endpoints, auth rules, error hierarchy, testing strategy, release-please setup
@@ -9,11 +9,11 @@ This is the official Mailrify Python SDK. See `./docs/` for the full specificati
 3. [openapi.json](./docs/openapi.json) — OpenAPI 3.0.3 specification (source of truth for schemas)
 
 ## Build Order
-1. Scaffold: `pyproject.toml` (name: `mailrify`), `src/mailrify/__init__.py`, `.gitignore`
-2. Exceptions (`src/mailrify/exceptions.py`) — `MailrifyError`, `AuthenticationError`, `ValidationError`, `NotFoundError`, `RateLimitError`, `ApiError`
-3. Models (`src/mailrify/models.py`) — Pydantic BaseModel DTOs: `Contact`, `Segment`, `Campaign`, `SendEmailResult`, `VerifyEmailResult`, `TrackEventResult`
-4. HttpClient (`src/mailrify/http_client.py`) — httpx transport, Bearer auth, JSON parsing, error mapping, retry with exponential backoff for 429/5xx
-5. Client (`src/mailrify/client.py`) — sync `Mailrify` + async `AsyncMailrify`, accepts API key + config, exposes `.emails`, `.events`, `.contacts`, `.campaigns`, `.segments`
+1. Scaffold: `pyproject.toml` (name: `mailglyph`), `src/mailglyph/__init__.py`, `.gitignore`
+2. Exceptions (`src/mailglyph/exceptions.py`) — `MailGlyphError`, `AuthenticationError`, `ValidationError`, `NotFoundError`, `RateLimitError`, `ApiError`
+3. Models (`src/mailglyph/models.py`) — Pydantic BaseModel DTOs: `Contact`, `Segment`, `Campaign`, `SendEmailResult`, `VerifyEmailResult`, `TrackEventResult`
+4. HttpClient (`src/mailglyph/http_client.py`) — httpx transport, Bearer auth, JSON parsing, error mapping, retry with exponential backoff for 429/5xx
+5. Client (`src/mailglyph/client.py`) — sync `MailGlyph` + async `AsyncMailGlyph`, accepts API key + config, exposes `.emails`, `.events`, `.contacts`, `.campaigns`, `.segments`
 6. Resources one at a time with pytest tests:
    - Emails (send, verify) → tests
    - Events (track with `pk_*` support, get_names) → tests

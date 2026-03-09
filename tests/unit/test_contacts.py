@@ -6,8 +6,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mailrify.client import AsyncMailrify, Mailrify
-from mailrify.exceptions import NotFoundError
+from mailglyph.client import AsyncMailGlyph, MailGlyph
+from mailglyph.exceptions import NotFoundError
 
 
 def parse_request_json(route: respx.Route) -> dict[str, object]:
@@ -26,8 +26,8 @@ CONTACT_PAYLOAD = {
 
 @respx.mock
 def test_list_paginated_with_cursor() -> None:
-    client = Mailrify("sk_test")
-    route = respx.get("https://api.mailrify.com/contacts").mock(
+    client = MailGlyph("sk_test")
+    route = respx.get("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             200,
             json={"contacts": [CONTACT_PAYLOAD], "cursor": "next_1", "hasMore": True, "total": 10},
@@ -44,8 +44,8 @@ def test_list_paginated_with_cursor() -> None:
 
 @respx.mock
 def test_list_with_filters() -> None:
-    client = Mailrify("sk_test")
-    route = respx.get("https://api.mailrify.com/contacts").mock(
+    client = MailGlyph("sk_test")
+    route = respx.get("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             200, json={"contacts": [], "cursor": None, "hasMore": False, "total": 0}
         )
@@ -61,8 +61,8 @@ def test_list_with_filters() -> None:
 
 @respx.mock
 def test_get_single_contact() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/contacts/ct_1").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/contacts/ct_1").mock(
         return_value=Response(200, json=CONTACT_PAYLOAD)
     )
 
@@ -74,8 +74,8 @@ def test_get_single_contact() -> None:
 
 @respx.mock
 def test_get_404_raises_not_found() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/contacts/ct_missing").mock(return_value=Response(404))
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/contacts/ct_missing").mock(return_value=Response(404))
 
     with pytest.raises(NotFoundError):
         client.contacts.get("ct_missing")
@@ -85,8 +85,8 @@ def test_get_404_raises_not_found() -> None:
 
 @respx.mock
 def test_create_new_contact_meta_is_new() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/contacts").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             201, json={**CONTACT_PAYLOAD, "_meta": {"isNew": True, "isUpdate": False}}
         )
@@ -101,8 +101,8 @@ def test_create_new_contact_meta_is_new() -> None:
 
 @respx.mock
 def test_create_upsert_meta_is_update() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/contacts").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             200, json={**CONTACT_PAYLOAD, "_meta": {"isNew": False, "isUpdate": True}}
         )
@@ -117,8 +117,8 @@ def test_create_upsert_meta_is_update() -> None:
 
 @respx.mock
 def test_update_subscribed_only() -> None:
-    client = Mailrify("sk_test")
-    route = respx.patch("https://api.mailrify.com/contacts/ct_1").mock(
+    client = MailGlyph("sk_test")
+    route = respx.patch("https://api.mailglyph.com/contacts/ct_1").mock(
         return_value=Response(200, json={**CONTACT_PAYLOAD, "subscribed": False})
     )
 
@@ -131,8 +131,8 @@ def test_update_subscribed_only() -> None:
 
 @respx.mock
 def test_update_custom_data() -> None:
-    client = Mailrify("sk_test")
-    route = respx.patch("https://api.mailrify.com/contacts/ct_1").mock(
+    client = MailGlyph("sk_test")
+    route = respx.patch("https://api.mailglyph.com/contacts/ct_1").mock(
         return_value=Response(200, json={**CONTACT_PAYLOAD, "data": {"plan": "enterprise"}})
     )
 
@@ -147,8 +147,8 @@ def test_update_custom_data() -> None:
 
 @respx.mock
 def test_delete_204_success() -> None:
-    client = Mailrify("sk_test")
-    route = respx.delete("https://api.mailrify.com/contacts/ct_1").mock(return_value=Response(204))
+    client = MailGlyph("sk_test")
+    route = respx.delete("https://api.mailglyph.com/contacts/ct_1").mock(return_value=Response(204))
 
     client.contacts.delete("ct_1")
 
@@ -158,8 +158,8 @@ def test_delete_204_success() -> None:
 
 @respx.mock
 def test_delete_404_not_found() -> None:
-    client = Mailrify("sk_test")
-    respx.delete("https://api.mailrify.com/contacts/ct_missing").mock(return_value=Response(404))
+    client = MailGlyph("sk_test")
+    respx.delete("https://api.mailglyph.com/contacts/ct_missing").mock(return_value=Response(404))
 
     with pytest.raises(NotFoundError):
         client.contacts.delete("ct_missing")
@@ -169,8 +169,8 @@ def test_delete_404_not_found() -> None:
 
 @respx.mock
 def test_count_uses_total() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/contacts").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             200, json={"contacts": [CONTACT_PAYLOAD], "cursor": None, "hasMore": False, "total": 42}
         )
@@ -185,13 +185,13 @@ def test_count_uses_total() -> None:
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_contacts_list() -> None:
-    respx.get("https://api.mailrify.com/contacts").mock(
+    respx.get("https://api.mailglyph.com/contacts").mock(
         return_value=Response(
             200, json={"contacts": [CONTACT_PAYLOAD], "cursor": None, "hasMore": False, "total": 1}
         )
     )
 
-    async with AsyncMailrify("sk_test") as client:
+    async with AsyncMailGlyph("sk_test") as client:
         page = await client.contacts.list(limit=1)
 
     assert page.total == 1

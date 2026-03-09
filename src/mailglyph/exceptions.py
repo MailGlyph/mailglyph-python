@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 
-class MailrifyError(Exception):
+class MailGlyphError(Exception):
     def __init__(
         self,
         message: str,
@@ -17,19 +17,19 @@ class MailrifyError(Exception):
         self.payload = payload
 
 
-class AuthenticationError(MailrifyError):
+class AuthenticationError(MailGlyphError):
     pass
 
 
-class ValidationError(MailrifyError):
+class ValidationError(MailGlyphError):
     pass
 
 
-class NotFoundError(MailrifyError):
+class NotFoundError(MailGlyphError):
     pass
 
 
-class RateLimitError(MailrifyError):
+class RateLimitError(MailGlyphError):
     def __init__(
         self,
         message: str,
@@ -42,5 +42,5 @@ class RateLimitError(MailrifyError):
         self.retry_after = retry_after
 
 
-class ApiError(MailrifyError):
+class ApiError(MailGlyphError):
     pass

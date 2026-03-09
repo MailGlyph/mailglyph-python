@@ -6,8 +6,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mailrify.client import AsyncMailrify, Mailrify
-from mailrify.exceptions import ValidationError
+from mailglyph.client import AsyncMailGlyph, MailGlyph
+from mailglyph.exceptions import ValidationError
 
 
 def parse_request_json(route: respx.Route) -> dict[str, object]:
@@ -35,8 +35,8 @@ VERIFY_VALID_RESPONSE = {
 
 @respx.mock
 def test_send_simple_string_to_from() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(
             200,
             json={
@@ -67,8 +67,8 @@ def test_send_simple_string_to_from() -> None:
 
 @respx.mock
 def test_send_object_to_from_with_names() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -89,8 +89,8 @@ def test_send_object_to_from_with_names() -> None:
 
 @respx.mock
 def test_send_array_of_recipients() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -109,8 +109,8 @@ def test_send_array_of_recipients() -> None:
 
 @respx.mock
 def test_send_template_with_data() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -130,8 +130,8 @@ def test_send_template_with_data() -> None:
 
 @respx.mock
 def test_send_with_attachments() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -157,8 +157,8 @@ def test_send_with_attachments() -> None:
 
 @respx.mock
 def test_send_includes_text_when_provided() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -177,8 +177,8 @@ def test_send_includes_text_when_provided() -> None:
 
 @respx.mock
 def test_send_omits_text_when_undefined() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -196,8 +196,8 @@ def test_send_omits_text_when_undefined() -> None:
 
 @respx.mock
 def test_send_includes_empty_text_string() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
 
@@ -216,8 +216,8 @@ def test_send_includes_empty_text_string() -> None:
 
 @respx.mock
 def test_send_validation_error_missing_to() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/v1/send").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(400, json={"message": "to is required"})
     )
 
@@ -229,8 +229,8 @@ def test_send_validation_error_missing_to() -> None:
 
 @respx.mock
 def test_verify_valid_email_full_result() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/v1/verify").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(200, json=VERIFY_VALID_RESPONSE)
     )
 
@@ -243,8 +243,8 @@ def test_verify_valid_email_full_result() -> None:
 
 @respx.mock
 def test_verify_typo_with_suggestion() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/v1/verify").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(
             200,
             json={
@@ -277,8 +277,8 @@ def test_verify_typo_with_suggestion() -> None:
 
 @respx.mock
 def test_verify_validation_error() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/v1/verify").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(400, json={"message": "invalid email"})
     )
 
@@ -291,14 +291,14 @@ def test_verify_validation_error() -> None:
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_send_and_verify() -> None:
-    send_route = respx.post("https://api.mailrify.com/v1/send").mock(
+    send_route = respx.post("https://api.mailglyph.com/v1/send").mock(
         return_value=Response(200, json={"success": True, "data": {"emails": [], "timestamp": "t"}})
     )
-    verify_route = respx.post("https://api.mailrify.com/v1/verify").mock(
+    verify_route = respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(200, json=VERIFY_VALID_RESPONSE)
     )
 
-    async with AsyncMailrify("sk_test") as client:
+    async with AsyncMailGlyph("sk_test") as client:
         await client.emails.send(to="user@example.com", from_="hello@example.com")
         verification = await client.emails.verify("user@gmail.com")
 

@@ -4,21 +4,21 @@ import pytest
 import respx
 from httpx import Response
 
-from mailrify.client import Mailrify
-from mailrify.exceptions import (
+from mailglyph.client import MailGlyph
+from mailglyph.exceptions import (
     ApiError,
     AuthenticationError,
     NotFoundError,
     RateLimitError,
     ValidationError,
 )
-from mailrify.http_client import HttpClient
+from mailglyph.http_client import HttpClient
 
 
 @respx.mock
 def test_bearer_auth_and_user_agent_headers() -> None:
-    client = Mailrify("sk_test_123")
-    route = respx.post("https://api.mailrify.com/v1/verify").mock(
+    client = MailGlyph("sk_test_123")
+    route = respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(
             200,
             json={
@@ -47,13 +47,13 @@ def test_bearer_auth_and_user_agent_headers() -> None:
     request = route.calls.last.request
     assert request.headers["Authorization"] == "Bearer sk_test_123"
     assert request.headers["Content-Type"] == "application/json"
-    assert request.headers["User-Agent"].startswith("mailrify-python/")
+    assert request.headers["User-Agent"].startswith("mailglyph-python/")
     client.close()
 
 
 @respx.mock
 def test_custom_base_url_and_timeout() -> None:
-    client = Mailrify("sk_test_123", base_url="https://example.local", timeout=5.0)
+    client = MailGlyph("sk_test_123", base_url="https://example.local", timeout=5.0)
     route = respx.post("https://example.local/v1/verify").mock(
         return_value=Response(
             200,
@@ -96,7 +96,7 @@ def test_custom_base_url_and_timeout() -> None:
 @respx.mock
 def test_error_mapping(status_code: int, exc_type: type[Exception]) -> None:
     http_client = HttpClient("sk_test")
-    respx.post("https://api.mailrify.com/v1/verify").mock(
+    respx.post("https://api.mailglyph.com/v1/verify").mock(
         return_value=Response(
             status_code,
             json={"error": "bad", "message": "problem", "code": status_code},
@@ -112,9 +112,9 @@ def test_error_mapping(status_code: int, exc_type: type[Exception]) -> None:
 @respx.mock
 def test_retry_on_429_and_respects_retry_after(monkeypatch: pytest.MonkeyPatch) -> None:
     http_client = HttpClient("sk_test", max_retries=2)
-    monkeypatch.setattr("mailrify.http_client.time.sleep", lambda _: None)
+    monkeypatch.setattr("mailglyph.http_client.time.sleep", lambda _: None)
 
-    route = respx.post("https://api.mailrify.com/v1/verify").mock(
+    route = respx.post("https://api.mailglyph.com/v1/verify").mock(
         side_effect=[
             Response(429, headers={"Retry-After": "0"}, json={"message": "rate limited"}),
             Response(
@@ -147,14 +147,14 @@ def test_retry_on_429_and_respects_retry_after(monkeypatch: pytest.MonkeyPatch) 
 
 
 def test_pk_key_restriction_for_non_track_endpoint() -> None:
-    client = Mailrify("pk_test")
+    client = MailGlyph("pk_test")
     with pytest.raises(AuthenticationError):
         client.events.get_names()
     client.close()
 
 
 def test_sk_key_restriction_for_track_endpoint() -> None:
-    client = Mailrify("sk_test")
+    client = MailGlyph("sk_test")
     with pytest.raises(AuthenticationError):
         client.events.track(email="user@example.com", event="purchase")
     client.close()

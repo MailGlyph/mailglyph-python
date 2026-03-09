@@ -6,8 +6,8 @@ from typing import Callable, TypeVar
 
 import pytest
 
-from mailrify import Mailrify
-from mailrify.exceptions import MailrifyError, NotFoundError
+from mailglyph import MailGlyph
+from mailglyph.exceptions import MailGlyphError, NotFoundError
 
 pytestmark = pytest.mark.integration
 
@@ -29,9 +29,9 @@ def _run_step(step_name: str, action: Callable[[], T]) -> T:
     _log_step(step_name)
     try:
         result = action()
-    except MailrifyError as exc:
+    except MailGlyphError as exc:
         pytest.fail(
-            f"[{step_name}] MailrifyError: status={exc.status_code}, "
+            f"[{step_name}] MailGlyphError: status={exc.status_code}, "
             f"body={exc.payload!r}, message={exc.message}"
         )
     except Exception as exc:
@@ -40,16 +40,16 @@ def _run_step(step_name: str, action: Callable[[], T]) -> T:
     return result
 
 
-@pytest.mark.skipif(not os.getenv("MAILRIFY_API_KEY"), reason="MAILRIFY_API_KEY not set")
-def test_local_mailrify_api_integration_flow() -> None:
-    base_url = os.getenv("MAILRIFY_BASE_URL", "http://localhost:8081")
-    secret_key = _require_env("MAILRIFY_API_KEY")
-    public_key = _require_env("MAILRIFY_PUBLIC_KEY")
-    test_domain = os.getenv("MAILRIFY_TEST_DOMAIN", "mailrify.com")
-    member_email = os.getenv("MAILRIFY_TEST_MEMBER_EMAIL", "info@mailrify.com")
+@pytest.mark.skipif(not os.getenv("MAILGLYPH_API_KEY"), reason="MAILGLYPH_API_KEY not set")
+def test_local_mailglyph_api_integration_flow() -> None:
+    base_url = os.getenv("MAILGLYPH_BASE_URL", "http://localhost:8081")
+    secret_key = _require_env("MAILGLYPH_API_KEY")
+    public_key = _require_env("MAILGLYPH_PUBLIC_KEY")
+    test_domain = os.getenv("MAILGLYPH_TEST_DOMAIN", "mailglyph.com")
+    member_email = os.getenv("MAILGLYPH_TEST_MEMBER_EMAIL", "info@mailglyph.com")
 
-    sk_client = Mailrify(secret_key, base_url=base_url)
-    pk_client = Mailrify(public_key, base_url=base_url)
+    sk_client = MailGlyph(secret_key, base_url=base_url)
+    pk_client = MailGlyph(public_key, base_url=base_url)
 
     created_contact_ids: list[str] = []
     created_segment_ids: list[str] = []
@@ -60,8 +60,8 @@ def test_local_mailrify_api_integration_flow() -> None:
         send_result = _run_step(
             "1) Email Send (sk_*)",
             lambda: sk_client.emails.send(
-                to="info@mailrify.com",
-                from_="sdk-test@mailrify.com",
+                to="info@mailglyph.com",
+                from_="sdk-test@mailglyph.com",
                 subject="SDK Integration Test",
                 body="<p>Test</p>",
             ),
@@ -71,15 +71,15 @@ def test_local_mailrify_api_integration_flow() -> None:
 
         verify_result = _run_step(
             "2) Email Verify (sk_*)",
-            lambda: sk_client.emails.verify("test@mailrify.com"),
+            lambda: sk_client.emails.verify("test@mailglyph.com"),
         )
-        assert verify_result.email == "test@mailrify.com", (
+        assert verify_result.email == "test@mailglyph.com", (
             "[2) Email Verify (sk_*)] Verified email did not match input"
         )
 
         track_result = _run_step(
             "3) Events Track (pk_*)",
-            lambda: pk_client.events.track(email="test@mailrify.com", event="sdk_test_event"),
+            lambda: pk_client.events.track(email="test@mailglyph.com", event="sdk_test_event"),
         )
         assert track_result.event, "[3) Events Track (pk_*)] Missing event identifier in response"
 
@@ -143,7 +143,7 @@ def test_local_mailrify_api_integration_flow() -> None:
                 name=campaign_name,
                 subject="Test",
                 body="<p>Test</p>",
-                from_email="sdk-test@mailrify.com",
+                from_email="sdk-test@mailglyph.com",
                 audience_type="ALL",
             ),
         )

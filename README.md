@@ -1,39 +1,39 @@
-# Mailrify Python SDK
+# MailGlyph Python SDK
 
-[![CI](https://github.com/Mailrify/mailrify-python/actions/workflows/ci.yml/badge.svg)](https://github.com/Mailrify/mailrify-python/actions/workflows/ci.yml)
-[![Release Please](https://github.com/Mailrify/mailrify-python/actions/workflows/release-please.yml/badge.svg)](https://github.com/Mailrify/mailrify-python/actions/workflows/release-please.yml)
-[![Publish to PyPI](https://github.com/Mailrify/mailrify-python/actions/workflows/publish.yml/badge.svg)](https://github.com/Mailrify/mailrify-python/actions/workflows/publish.yml)
+[![CI](https://github.com/MailGlyph/mailglyph-python/actions/workflows/ci.yml/badge.svg)](https://github.com/MailGlyph/mailglyph-python/actions/workflows/ci.yml)
+[![Release Please](https://github.com/MailGlyph/mailglyph-python/actions/workflows/release-please.yml/badge.svg)](https://github.com/MailGlyph/mailglyph-python/actions/workflows/release-please.yml)
+[![Publish to PyPI](https://github.com/MailGlyph/mailglyph-python/actions/workflows/publish.yml/badge.svg)](https://github.com/MailGlyph/mailglyph-python/actions/workflows/publish.yml)
 
-Official Python SDK for the Mailrify API.
+Official Python SDK for the MailGlyph API.
 
 ## Installation
 
 ```bash
-pip install mailrify
+pip install mailglyph
 ```
 
 ## Quick Start (Sync)
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 ```
 
 ## Quick Start (Async)
 
 ```python
-from mailrify import AsyncMailrify
+from mailglyph import AsyncMailGlyph
 
-client = AsyncMailrify("sk_your_api_key")
+client = AsyncMailGlyph("sk_your_api_key")
 ```
 
 ## Emails
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 
 result = client.emails.send(
     to="user@example.com",
@@ -44,7 +44,7 @@ result = client.emails.send(
     data={"name": "John"},
 )
 
-# Omit `text` to let Mailrify auto-generate plain text from HTML `body`.
+# Omit `text` to let MailGlyph auto-generate plain text from HTML `body`.
 html_only_result = client.emails.send(
     to="user@example.com",
     from_="hello@myapp.com",
@@ -68,25 +68,25 @@ print(verification.valid, verification.is_random_input)
 ## Events
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-tracker = Mailrify("pk_your_public_key")
+tracker = MailGlyph("pk_your_public_key")
 tracker.events.track(
     email="user@example.com",
     event="purchase",
     data={"product": "Premium", "amount": 99},
 )
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 names = client.events.get_names()
 ```
 
 ## Contacts
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 
 contacts = client.contacts.list(limit=50)
 contact = client.contacts.create(email="new@example.com", data={"plan": "premium"})
@@ -98,9 +98,9 @@ count = client.contacts.count()
 ## Segments
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 
 segment = client.segments.create(
     name="Premium Users",
@@ -124,9 +124,9 @@ removed = client.segments.remove_members(segment.id, emails=["bob@example.com"])
 ## Campaigns
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify("sk_your_api_key")
+client = MailGlyph("sk_your_api_key")
 
 campaign = client.campaigns.create(
     name="Product Launch",
@@ -148,11 +148,11 @@ client.campaigns.cancel(campaign.id)
 ```python
 import asyncio
 
-from mailrify import AsyncMailrify
+from mailglyph import AsyncMailGlyph
 
 
 async def main() -> None:
-    async with AsyncMailrify("sk_your_api_key") as client:
+    async with AsyncMailGlyph("sk_your_api_key") as client:
         verification = await client.emails.verify("user@example.com")
         print(verification.valid)
 
@@ -163,11 +163,11 @@ asyncio.run(main())
 ## Configuration
 
 ```python
-from mailrify import Mailrify
+from mailglyph import MailGlyph
 
-client = Mailrify(
+client = MailGlyph(
     "sk_your_api_key",
-    base_url="https://api.mailrify.com",
+    base_url="https://api.mailglyph.com",
     timeout=30.0,
     max_retries=3,
 )

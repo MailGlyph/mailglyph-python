@@ -6,8 +6,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mailrify.client import AsyncMailrify, Mailrify
-from mailrify.exceptions import NotFoundError, ValidationError
+from mailglyph.client import AsyncMailGlyph, MailGlyph
+from mailglyph.exceptions import NotFoundError, ValidationError
 
 
 def parse_request_json(route: respx.Route) -> dict[str, object]:
@@ -42,8 +42,8 @@ CAMPAIGN_DATA = {
 
 @respx.mock
 def test_list_returns_paginated_campaigns() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/campaigns").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/campaigns").mock(
         return_value=Response(
             200,
             json={
@@ -66,8 +66,8 @@ def test_list_returns_paginated_campaigns() -> None:
 
 @respx.mock
 def test_list_with_status_filter() -> None:
-    client = Mailrify("sk_test")
-    route = respx.get("https://api.mailrify.com/campaigns").mock(
+    client = MailGlyph("sk_test")
+    route = respx.get("https://api.mailglyph.com/campaigns").mock(
         return_value=Response(
             200, json={"data": [], "page": 2, "pageSize": 5, "total": 0, "totalPages": 0}
         )
@@ -83,8 +83,8 @@ def test_list_with_status_filter() -> None:
 
 @respx.mock
 def test_create_with_required_fields() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/campaigns").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/campaigns").mock(
         return_value=Response(201, json={"success": True, "data": CAMPAIGN_DATA})
     )
 
@@ -103,8 +103,8 @@ def test_create_with_required_fields() -> None:
 
 @respx.mock
 def test_create_validation_error_missing_subject() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/campaigns").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/campaigns").mock(
         return_value=Response(400, json={"message": "subject is required"})
     )
 
@@ -122,8 +122,8 @@ def test_create_validation_error_missing_subject() -> None:
 
 @respx.mock
 def test_get_campaign_by_id() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/campaigns/cmp_1").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/campaigns/cmp_1").mock(
         return_value=Response(200, json={"success": True, "data": CAMPAIGN_DATA})
     )
 
@@ -135,8 +135,8 @@ def test_get_campaign_by_id() -> None:
 
 @respx.mock
 def test_get_campaign_404() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/campaigns/cmp_missing").mock(return_value=Response(404))
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/campaigns/cmp_missing").mock(return_value=Response(404))
 
     with pytest.raises(NotFoundError):
         client.campaigns.get("cmp_missing")
@@ -146,8 +146,8 @@ def test_get_campaign_404() -> None:
 
 @respx.mock
 def test_update_partial_campaign() -> None:
-    client = Mailrify("sk_test")
-    route = respx.put("https://api.mailrify.com/campaigns/cmp_1").mock(
+    client = MailGlyph("sk_test")
+    route = respx.put("https://api.mailglyph.com/campaigns/cmp_1").mock(
         return_value=Response(
             200, json={"success": True, "data": {**CAMPAIGN_DATA, "subject": "Updated"}}
         )
@@ -173,8 +173,8 @@ def test_update_partial_campaign() -> None:
 
 @respx.mock
 def test_send_campaign_immediate() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/campaigns/cmp_1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/campaigns/cmp_1/send").mock(
         return_value=Response(200)
     )
 
@@ -187,8 +187,8 @@ def test_send_campaign_immediate() -> None:
 
 @respx.mock
 def test_send_campaign_scheduled() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/campaigns/cmp_1/send").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/campaigns/cmp_1/send").mock(
         return_value=Response(200)
     )
 
@@ -200,8 +200,8 @@ def test_send_campaign_scheduled() -> None:
 
 @respx.mock
 def test_cancel_campaign() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/campaigns/cmp_1/cancel").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/campaigns/cmp_1/cancel").mock(
         return_value=Response(
             200, json={"success": True, "data": CAMPAIGN_DATA, "message": "cancelled"}
         )
@@ -215,8 +215,8 @@ def test_cancel_campaign() -> None:
 
 @respx.mock
 def test_cancel_campaign_404() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/campaigns/cmp_missing/cancel").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/campaigns/cmp_missing/cancel").mock(
         return_value=Response(404)
     )
 
@@ -228,8 +228,8 @@ def test_cancel_campaign_404() -> None:
 
 @respx.mock
 def test_test_campaign_email() -> None:
-    client = Mailrify("sk_test")
-    route = respx.post("https://api.mailrify.com/campaigns/cmp_1/test").mock(
+    client = MailGlyph("sk_test")
+    route = respx.post("https://api.mailglyph.com/campaigns/cmp_1/test").mock(
         return_value=Response(200, json={"success": True, "message": "sent"})
     )
 
@@ -242,8 +242,8 @@ def test_test_campaign_email() -> None:
 
 @respx.mock
 def test_test_campaign_validation_error_missing_email() -> None:
-    client = Mailrify("sk_test")
-    respx.post("https://api.mailrify.com/campaigns/cmp_1/test").mock(
+    client = MailGlyph("sk_test")
+    respx.post("https://api.mailglyph.com/campaigns/cmp_1/test").mock(
         return_value=Response(400, json={"message": "email is required"})
     )
 
@@ -255,8 +255,8 @@ def test_test_campaign_validation_error_missing_email() -> None:
 
 @respx.mock
 def test_stats_returns_analytics() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/campaigns/cmp_1/stats").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/campaigns/cmp_1/stats").mock(
         return_value=Response(200, json={"success": True, "data": {"sent": 100, "opened": 70}})
     )
 
@@ -268,8 +268,8 @@ def test_stats_returns_analytics() -> None:
 
 @respx.mock
 def test_stats_404() -> None:
-    client = Mailrify("sk_test")
-    respx.get("https://api.mailrify.com/campaigns/cmp_missing/stats").mock(
+    client = MailGlyph("sk_test")
+    respx.get("https://api.mailglyph.com/campaigns/cmp_missing/stats").mock(
         return_value=Response(404)
     )
 
@@ -282,11 +282,11 @@ def test_stats_404() -> None:
 @pytest.mark.asyncio
 @respx.mock
 async def test_async_campaign_create() -> None:
-    respx.post("https://api.mailrify.com/campaigns").mock(
+    respx.post("https://api.mailglyph.com/campaigns").mock(
         return_value=Response(201, json={"success": True, "data": CAMPAIGN_DATA})
     )
 
-    async with AsyncMailrify("sk_test") as client:
+    async with AsyncMailGlyph("sk_test") as client:
         campaign = await client.campaigns.create(
             name="Launch",
             subject="Hello",
