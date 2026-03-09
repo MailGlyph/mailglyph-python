@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/MailGlyph/mailglyph-python/compare/v1.0.1...v2.0.0) (2026-03-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Renames the SDK/package branding from Mailrify to MailGlyph.
+
+### Features
+
+* Add `text` field to email sending parameters. ([cf7ae10](https://github.com/MailGlyph/mailglyph-python/commit/cf7ae10cf0bbcc4c79e80f38b75039a00973b367))
+* Implement methods to add and remove contacts from static segments, along with supporting types and documentation. ([03b99ee](https://github.com/MailGlyph/mailglyph-python/commit/03b99ee87396e41c6bc5d758ae6bad8f0c5d4c33))
+
+
+### Code Refactoring
+
+* rebrand Mailrify to MailGlyph ([431caad](https://github.com/MailGlyph/mailglyph-python/commit/431caadd0eedeed19e77c01ec453005bafe2d9dd))
+
 ## [1.0.1](https://github.com/MailGlyph/mailglyph-python/compare/v1.0.0...v1.0.1) (2026-02-16)
 
 
